@@ -1,0 +1,32 @@
+from nltk.corpus import wordnet as wn
+import numpy as np
+
+# get all synonyms for a word
+def get_synonyms(input_word):
+    synonyms = []
+    for i,j in enumerate(wn.synsets(input_word)):
+        synonyms += j.lemma_names()
+    synonyms = list(set(synonyms))
+    new_synonyms = []
+    return synonyms
+    
+   
+def synonym_cascade(input_word,number_of_cascades):
+    synonyms = get_synonyms(input_word)
+    for cascade in range(number_of_cascades-1):
+        new_synonyms = []
+        for s in synonyms:
+            new_synonyms = new_synonyms + get_synonyms(s)
+        synonyms += new_synonyms
+    synonyms = list(set(synonyms))
+    return synonyms
+    
+
+
+def connecting_words(word1,word2,cascade):
+    list1 = synonym_cascade(word1,cascade)
+    list2 = synonym_cascade(word2,cascade)
+    return list(set(list1)&set(list2))
+ 
+get_synonyms('candle') 
+synonym_cascade("candle",5)
